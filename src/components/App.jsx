@@ -1,80 +1,22 @@
-import { useState, useEffect } from 'react';
-
-import { nanoid } from 'nanoid';
-import { generateName } from './utils/randomname';
+import { useSelector, useDispatch } from 'react-redux';
+import { getContacts } from 'redux/contacts/contactsSelector';
+import { getFilter } from 'redux/filter/filterSelector';
 
 import { Section } from './Section';
 import { AddContact } from './AddContact';
 import { Filter } from './Filter';
 import { Contacts } from './Contacts';
 
+import { changeFilter } from 'redux/filter/filterSlice';
+import { addContact, deleteContact } from 'redux/contacts/contactsSlice';
+
 export const App = () => {
-  const initialContacts = [
-    {
-      id: nanoid(),
-      name: `${generateName()} (example contact)`,
-      number: '096-12345678',
-    },
-    {
-      id: nanoid(),
-      name: `${generateName()} (example contact)`,
-      number: '097-12345678',
-    },
-    {
-      id: nanoid(),
-      name: `${generateName()} (example contact)`,
-      number: '098-12345678',
-    },
-    {
-      id: nanoid(),
-      name: `${generateName()} (example contact)`,
-      number: '099-12345678',
-    },
-    {
-      id: nanoid(),
-      name: `${generateName()} (example contact)`,
-      number: '099-12345678',
-    },
-    {
-      id: nanoid(),
-      name: `${generateName()} (example contact)`,
-      number: '099-12345678',
-    },
-    {
-      id: nanoid(),
-      name: `${generateName()} (example contact)`,
-      number: '099-12345678',
-    },
-    {
-      id: nanoid(),
-      name: `${generateName()} (example contact)`,
-      number: '099-12345678',
-    },
-    {
-      id: nanoid(),
-      name: `${generateName()} (example contact)`,
-      number: '099-12345678',
-    },
-    {
-      id: nanoid(),
-      name: `${generateName()} (example contact)`,
-      number: '099-12345678',
-    },
-  ];
-
-  const [contacts, setContacts] = useState(
-    localStorage.getItem('contacts')
-      ? JSON.parse(localStorage.getItem('contacts'))
-      : initialContacts
-  );
-  const [filter, setFilter] = useState('');
-
-  useEffect(() => {
-    localStorage.setItem('contacts', JSON.stringify(contacts));
-  }, [contacts]);
+  const contacts = useSelector(getContacts);
+  const filter = useSelector(getFilter);
+  const dispatch = useDispatch();
 
   const filterContacts = input => {
-    setFilter(input);
+    dispatch(changeFilter(input));
   };
 
   const filteredContacts = () => {
@@ -83,35 +25,29 @@ export const App = () => {
     );
   };
 
-  const addContact = newContact => {
+  const addNewContact = newContact => {
     if (contacts.find(contact => contact.name === newContact.name)) {
       return alert(`${newContact.name} is already in contacts!`);
     }
 
-    setContacts(prevState => {
-      const newState = [newContact, ...prevState];
-      return newState;
-    });
+    dispatch(addContact(newContact));
   };
 
-  const deleteContact = id => {
-    setContacts(prevState => {
-      const newContacts = prevState.filter(contact => contact.id !== id);
-      return newContacts;
-    });
+  const deleteSomeContact = id => {
+    dispatch(deleteContact(id));
   };
 
   return (
     <>
-      <h1>React-HW04_02 @nickgric</h1>
+      <h1>React-HW06 'Redux' @nickgric</h1>
       <Section title="Phonebook">
-        <AddContact addContact={addContact} />
+        <AddContact addContact={addNewContact} />
       </Section>
       <Section title="Contacts">
         <Filter filterContacts={filterContacts} />
         <Contacts
           filteredContacts={filteredContacts}
-          deleteContact={deleteContact}
+          deleteContact={deleteSomeContact}
         />
       </Section>
     </>
