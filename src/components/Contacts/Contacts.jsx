@@ -1,10 +1,26 @@
 import PropTypes from 'prop-types';
 import Avatar from 'react-avatar';
 
-export const Contacts = ({ filteredContacts, deleteContact }) => {
+import { deleteContact } from 'redux/contacts/contactsSlice';
+import { useDispatch, useSelector } from 'react-redux';
+
+import { getContacts } from 'redux/contacts/contactsSelector';
+import { getFilter } from 'redux/filter/filterSelector';
+
+export const Contacts = () => {
+  const dispatch = useDispatch();
+  const contacts = useSelector(getContacts);
+  const filter = useSelector(getFilter);
+
+  const filteredContacts = () => {
+    return contacts.filter(contact =>
+      contact.name.toLowerCase().includes(filter.toLowerCase())
+    );
+  };
+
   const clickHandler = ({ target: { name } }) => {
     const id = name;
-    deleteContact(id);
+    dispatch(deleteContact(id));
   };
 
   return (

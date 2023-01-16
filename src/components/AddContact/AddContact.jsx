@@ -3,16 +3,27 @@ import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { nanoid } from 'nanoid';
 
-export const AddContact = ({ addContact }) => {
+import { useSelector, useDispatch } from 'react-redux';
+import { addContact } from 'redux/contacts/contactsSlice';
+import { getContacts } from 'redux/contacts/contactsSelector';
+
+export const AddContact = ({}) => {
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
+
+  const dispatch = useDispatch();
+  const contacts = useSelector(getContacts);
 
   const submitHandler = event => {
     event.preventDefault();
 
     const id = nanoid();
 
-    addContact({ name, number, id });
+    if (contacts.find(contact => contact.name === name)) {
+      return alert(`${name} is already in contacts!`);
+    }
+
+    dispatch(addContact({ name, number, id }));
 
     event.target.reset();
   };

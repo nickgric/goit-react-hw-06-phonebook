@@ -1,8 +1,13 @@
 import PropTypes from 'prop-types';
 
-export const Filter = ({ filterContacts }) => {
+import { changeFilter } from 'redux/filter/filterSlice';
+import { useDispatch } from 'react-redux';
+
+export const Filter = () => {
+  const dispatch = useDispatch();
+
   const filterHandler = ({ target: { value } }) => {
-    filterContacts(value);
+    dispatch(changeFilter(value));
   };
 
   return (
