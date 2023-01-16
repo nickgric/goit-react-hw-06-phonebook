@@ -7,7 +7,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { addContact } from 'redux/contacts/contactsSlice';
 import { getContacts } from 'redux/contacts/contactsSelector';
 
-export const AddContact = ({}) => {
+export const AddContact = () => {
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
 
